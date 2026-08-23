@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ContentPage } from '@/components/content/ContentPage';
 import { GUIDE_BY_SLUG, GUIDES } from '@/lib/guides';
-import { CALCULATOR_BY_ID } from '@/lib/registry';
+import { CALCULATOR_BY_ID, type CalculatorMeta } from '@/lib/registry';
 import { generatePageMetadata } from '@/lib/seo';
 
 export function generateStaticParams() {
@@ -28,7 +28,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
 
   const calculators = guide.relatedCalculatorIds
     .map((id) => CALCULATOR_BY_ID[id])
-    .filter(Boolean);
+    .filter((calculator): calculator is CalculatorMeta => Boolean(calculator));
 
   return (
     <ContentPage
