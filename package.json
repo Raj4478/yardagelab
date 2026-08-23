@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "audit:site": "node scripts/seo-audit.mjs",
-    "healthcheck": "node scripts/health-check.mjs"
+    "healthcheck": "node scripts/health-check.mjs",
+    "lighthouse": "lhci autorun"
   },
   "dependencies": {
     "next": "16.2.11",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "0.15.1",
     "@playwright/test": "1.62.1",
     "@types/node": "22.17.2",
     "@types/react": "19.2.18",
