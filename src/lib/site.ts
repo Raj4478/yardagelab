@@ -1,12 +1,15 @@
 /** Global site configuration and canonical URL helpers. */
 
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const canonicalSiteUrl = configuredSiteUrl || 'https://yardagelab.com';
+
 export const SITE = {
   name: 'YardageLab',
   tagline: 'Fabric math without the guesswork.',
   description:
     'Free calculators, visual cutting plans and project planning tools for sewing, quilting and fabric projects.',
-  /** Canonical production origin. Override with NEXT_PUBLIC_SITE_URL. */
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://yardagelab.com').replace(/\/$/, ''),
+  /** Canonical production origin. Blank or missing values safely fall back to yardagelab.com. */
+  url: canonicalSiteUrl.replace(/\/$/, ''),
   locale: 'en-US',
   twitter: '@yardagelab',
   organization: 'YardageLab',
