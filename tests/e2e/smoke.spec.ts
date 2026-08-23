@@ -25,7 +25,7 @@ test.describe('critical public routes', () => {
 
 test('quilt backing calculator produces a result and keeps navigation usable', async ({ page }) => {
   await page.goto('/quilting/backing-calculator/');
-  await expect(page.getByText('Backing fabric to buy')).toBeVisible();
+  await expect(page.getByText('Backing fabric to buy', { exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: /YardageLab/i }).first()).toBeVisible();
 });
 
