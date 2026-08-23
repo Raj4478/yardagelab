@@ -9,7 +9,7 @@ const config: Config = {
     extend: {
       colors: {
         // Warm paper / cutting-table palette. Text-bearing tokens are WCAG AA safe
-        // against the paper/card surfaces used throughout the application.
+        // against the paper/card/result surfaces used throughout the application.
         paper: {
           DEFAULT: '#f7f2e9',
           deep: '#efe6d5',
@@ -28,7 +28,7 @@ const config: Config = {
         teal: {
           DEFAULT: '#1f5a52',
           deep: '#153f39',
-          soft: '#9cc0b9',
+          soft: '#b7d3ce',
         },
         line: '#ddd0ba',
       },
