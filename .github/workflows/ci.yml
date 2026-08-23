@@ -48,17 +48,24 @@ jobs:
 
   web-quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     needs: quality
+    env:
+      VERCEL_ENV: production
+      NEXT_PUBLIC_ALLOW_INDEX: 'true'
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      AUDIT_BASE_URL: http://127.0.0.1:3000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22.13.0
       - run: npm install --legacy-peer-deps
-      - name: Start local site
+      - name: Build production site
+        run: npm run build
+      - name: Start production site
         run: |
-          npm run dev > /tmp/yardagelab.log 2>&1 &
+          npm start > /tmp/yardagelab.log 2>&1 &
           echo $! > /tmp/yardagelab.pid
           for i in {1..60}; do
             if curl -fsS http://127.0.0.1:3000/ >/dev/null; then exit 0; fi
