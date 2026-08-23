@@ -4,6 +4,7 @@ import './globals.css';
 import { SITE } from '@/lib/site';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { ConsentBanner } from '@/components/privacy/ConsentBanner';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo';
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <ConsentBanner />
+        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
       </body>
     </html>
   );
