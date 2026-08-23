@@ -4,6 +4,7 @@ import './globals.css';
 import { SITE } from '@/lib/site';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { ConsentBanner } from '@/components/privacy/ConsentBanner';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <ConsentBanner />
       </body>
     </html>
   );
