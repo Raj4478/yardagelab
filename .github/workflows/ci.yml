@@ -17,7 +17,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.13.0
-          cache: npm
       - run: npm install --legacy-peer-deps
       - run: npm run typecheck
       - run: npm run lint
@@ -33,7 +32,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.13.0
-          cache: npm
       - run: npm install --legacy-peer-deps
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
@@ -57,7 +55,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.13.0
-          cache: npm
       - run: npm install --legacy-peer-deps
       - name: Start local site
         run: |
