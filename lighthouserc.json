@@ -1,8 +1,6 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run dev",
-      "startServerReadyPattern": "Ready|ready",
       "url": [
         "http://127.0.0.1:3000/",
         "http://127.0.0.1:3000/quilting/backing-calculator/",
