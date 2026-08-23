@@ -47,8 +47,8 @@ export function ConsentBanner() {
     >
       <h2 className="font-display text-xl font-semibold text-ink">Privacy choices</h2>
       <p className="mt-2 font-sans text-sm leading-relaxed text-ink-soft">
-        YardageLab can run with essential storage only. If analytics or advertising is enabled later,
-        optional tags must wait for your choice where consent is required.
+        YardageLab uses optional Google Analytics to understand how the tools are used. You can allow
+        analytics or continue with essential storage only; calculator measurements are not sent to analytics.
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <button type="button" className="btn-primary" onClick={() => save('accepted')}>
