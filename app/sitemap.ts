@@ -34,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const guides = GUIDES.map((guide) => ({
     url: absoluteUrl(`/guides/${guide.slug}/`),
     lastModified: new Date(`${guide.lastReviewed}T00:00:00Z`),
-    changeFrequency: 'quarterly' as const,
+    changeFrequency: 'monthly' as const,
     priority: 0.65,
   }));
 
