@@ -8,7 +8,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm paper / cutting-table palette
+        // Warm paper / cutting-table palette. Text-bearing tokens are WCAG AA safe
+        // against the paper/card/result surfaces used throughout the application.
         paper: {
           DEFAULT: '#f7f2e9',
           deep: '#efe6d5',
@@ -17,17 +18,17 @@ const config: Config = {
         ink: {
           DEFAULT: '#22201c',
           soft: '#4a463f',
-          faint: '#7c7568',
+          faint: '#746d60',
         },
         terracotta: {
-          DEFAULT: '#c4593a',
+          DEFAULT: '#b54d31',
           deep: '#a3452b',
           soft: '#e8ad99',
         },
         teal: {
           DEFAULT: '#1f5a52',
           deep: '#153f39',
-          soft: '#9cc0b9',
+          soft: '#b7d3ce',
         },
         line: '#ddd0ba',
       },
@@ -42,7 +43,7 @@ const config: Config = {
       },
       backgroundImage: {
         'ruler-grid':
-          'linear-gradient(to right, rgba(196,89,58,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(196,89,58,0.05) 1px, transparent 1px)',
+          'linear-gradient(to right, rgba(181,77,49,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(181,77,49,0.05) 1px, transparent 1px)',
       },
       borderRadius: {
         xl2: '1.25rem',

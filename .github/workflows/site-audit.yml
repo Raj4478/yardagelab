@@ -1,0 +1,42 @@
+name: Production Site Audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 4 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+      - name: Skip until production URL is configured
+        if: ${{ vars.SITE_URL == '' }}
+        run: echo 'Set repository variable SITE_URL after production deployment to enable scheduled audits.'
+      - name: Install dependencies
+        if: ${{ vars.SITE_URL != '' }}
+        run: npm install --legacy-peer-deps
+      - name: Health check
+        if: ${{ vars.SITE_URL != '' }}
+        run: npm run healthcheck
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+      - name: Crawl and SEO audit
+        if: ${{ vars.SITE_URL != '' }}
+        run: npm run audit:site
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          AUDIT_MAX_PAGES: 500
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && vars.SITE_URL != '' }}
+        with:
+          name: weekly-production-seo-audit
+          path: reports/seo-audit.json
+          if-no-files-found: ignore

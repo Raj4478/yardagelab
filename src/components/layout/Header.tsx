@@ -25,6 +25,9 @@ export function Header() {
               {hub.title.replace(' Calculators', '').replace(' & Reference', '')}
             </Link>
           ))}
+          <Link href="/guides/" className="rounded-full px-3.5 py-2 font-sans text-sm font-medium text-ink-soft transition hover:bg-ink/5 hover:text-ink">
+            Guides
+          </Link>
           <Link href="/calculation-methodology/" className="ml-1 btn-ghost">
             How it works
           </Link>
@@ -35,18 +38,14 @@ export function Header() {
           className="btn-ghost md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((value) => !value)}
         >
           {open ? 'Close' : 'Menu'}
         </button>
       </div>
 
       {open && (
-        <nav
-          id="mobile-nav"
-          aria-label="Mobile"
-          className="border-t border-line/70 bg-paper md:hidden"
-        >
+        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-line/70 bg-paper md:hidden">
           <div className="container-wide flex flex-col py-2">
             {NAV.map((hub) => (
               <Link
@@ -58,6 +57,9 @@ export function Header() {
                 {hub.title}
               </Link>
             ))}
+            <Link href="/guides/" className="rounded-lg px-3 py-3 font-sans text-base font-medium text-ink-soft hover:bg-ink/5" onClick={() => setOpen(false)}>
+              Guides
+            </Link>
             <Link
               href="/calculation-methodology/"
               className="rounded-lg px-3 py-3 font-sans text-base font-medium text-teal hover:bg-ink/5"

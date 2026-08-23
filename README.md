@@ -1,143 +1,140 @@
 # YardageLab
 
-**Fabric math without the guesswork.** — Free, fast, SEO-first sewing, quilting and fabric
-planning calculators. Built with Next.js (App Router), TypeScript (strict), and Tailwind CSS.
+**Fabric math without the guesswork.** YardageLab is a static-first Next.js utility site for sewing, quilting and fabric planning. It combines deterministic calculators, visual result plans, evergreen reference guides and a production SEO/quality toolchain.
 
-Six calculators, each with a deterministic + tested domain function, a visual cutting plan, and a
-full content page (methodology, worked example, reference, FAQ):
+## Current product surface
 
-| Calculator | Route |
-| --- | --- |
-| Quilt Backing | `/quilting/backing-calculator/` |
-| Quilt Binding | `/quilting/binding-calculator/` |
-| Quilt Size | `/quilting/quilt-size-calculator/` |
-| Fabric Yardage | `/sewing/fabric-yardage-calculator/` |
-| Curtain Fabric | `/home-decor/curtain-fabric-calculator/` |
-| Fabric Unit Converter | `/conversions/fabric-unit-converter/` |
+- Quilt Backing Calculator — `/quilting/backing-calculator/`
+- Quilt Binding Calculator — `/quilting/binding-calculator/`
+- Quilt Size Calculator — `/quilting/quilt-size-calculator/`
+- Fabric Yardage Calculator — `/sewing/fabric-yardage-calculator/`
+- Curtain Fabric Calculator — `/home-decor/curtain-fabric-calculator/`
+- Fabric Unit Converter — `/conversions/fabric-unit-converter/`
+- Evergreen supporting guides — `/guides/`
 
----
+Calculator math lives in pure functions under `src/calculators/`; UI and routing do not own domain formulas.
 
-## Quick start
+## Runtime
 
-> Requires **Node.js 18.17+** (works on Node 18 and 20). Examples use `npm`; `pnpm`/`yarn` work too.
+- Node.js `>=22.13 <25`
+- Next.js `16.2.11` (patched Active-LTS line at the time of this branch)
+- React `19.2.8`
+- TypeScript strict mode
+- Tailwind CSS
+
+Framework/security versions are operational dependencies, not permanent architectural choices. Keep them on supported patched release lines and let Dependabot surface updates.
+
+## Local setup
 
 ```bash
-# 1. Install dependencies
 npm install --legacy-peer-deps
-
-# 2. Start the dev server
 npm run dev
 ```
 
-Then open **http://localhost:3000** in your browser.
+Open `http://localhost:3000`.
 
-> **Why `--legacy-peer-deps`?** Some npm 10 versions report a spurious peer-dependency conflict for
-> `react` on first install. The flag sidesteps it; the installed tree is correct. Plain
-> `npm install` also works on most setups (an `.npmrc` in the repo already sets this flag).
+Before merging dependency changes, generate and commit a fresh `package-lock.json` from the supported Node/npm toolchain so CI can move from `npm install` to `npm ci`.
 
-### Troubleshooting a slow or hanging install
-
-If `npm install` hangs for a long time or fails with `ENETUNREACH` on an **IPv6** address, your
-network has a broken IPv6 route to the npm registry. Force IPv4 and it installs in seconds:
+## Quality commands
 
 ```bash
-NODE_OPTIONS=--dns-result-order=ipv4first npm install
-```
-
-The same prefix helps the first `npm run build`, which downloads the Google fonts:
-
-```bash
-NODE_OPTIONS=--dns-result-order=ipv4first npm run build
-```
-
----
-
-## Available scripts
-
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the dev server at `localhost:3000` |
-| `npm run build` | Production build |
-| `npm start` | Serve the production build (run `build` first) |
-| `npm test` | Run the Vitest unit + golden test suite |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run typecheck` | TypeScript type check (no emit) |
-
-> **Linting (optional):** to enable `next lint`, install the tooling and add a `lint` script:
-> `npm i -D eslint eslint-config-next` (an `.eslintrc.json` is already included). It was left out of
-> the default dependencies to keep the install lean; builds never block on it.
-
----
-
-## Testing the calculators
-
-All calculator math lives in pure, framework-free functions under `src/calculators/` and is covered
-by **golden tests** (expert-verified input/output tables) in `tests/`.
-
-```bash
+npm run typecheck
+npm run lint
 npm test
+npm run build
+npm run test:e2e
+npm run audit:site
+npm run healthcheck
+npm run lighthouse
 ```
 
-You should see the units, rounding and all six calculator suites pass. To try the UI by hand, run
-`npm run dev` and, for example, open the quilt backing calculator, enter a 60 × 80 quilt on 42″
-fabric with 4″ overhang — it should recommend **5 yd** across **2 vertical panels**.
+`npm run audit:site` crawls the configured same-origin site, reads `robots.txt`, checks status codes, titles, descriptions, canonicals, H1 counts, duplicate titles and orphan-page signals, and writes `reports/seo-audit.json`.
 
----
+Use a different target with:
 
-## Project structure
-
-```
-app/                      # Next.js App Router pages, routes, sitemap.ts, robots.ts
-  (hubs)/…/page.tsx       # Category hubs + calculator pages
-  layout.tsx              # Root layout, fonts, header/footer, global JSON-LD
-src/
-  calculators/            # Pure, deterministic domain math (the tested core)
-  components/
-    calculators/          # Interactive calculator UI (client components)
-    content/              # Page scaffolds, hubs, long-form sections
-    layout/               # Header, footer, breadcrumb, logo
-    seo/                  # Structured-data injector
-  lib/                    # units, rounding, validation, seo, registry, site, analytics
-tests/                    # Vitest unit + golden tests
+```bash
+SITE_URL=https://example.com npm run audit:site
+SITE_URL=https://example.com npm run healthcheck
 ```
 
-`src/lib/registry.ts` is the single source of truth for calculators, hubs and static pages — it
-drives navigation, breadcrumbs, the sitemap and internal linking. Add a calculator there to wire it
-into all of them.
+## Repository structure
 
-See **[ARCHITECTURE.md](ARCHITECTURE.md)** for design decisions and the calculation methodology
-lives at `/calculation-methodology/` in the running app.
+```text
+app/                         Next.js App Router pages, sitemap and robots
+src/calculators/             pure deterministic domain calculations
+src/components/calculators/  interactive tool UI
+src/components/content/      shared page/hub scaffolds
+src/components/layout/       header, footer, breadcrumbs and brand UI
+src/components/privacy/      consent scaffold for future optional tags
+src/components/seo/          structured-data rendering
+src/lib/                     units, rounding, validation, SEO, registry, guides, analytics
+scripts/                     SEO crawler and production health utilities
+tests/                       unit/golden tests
+tests/e2e/                   Playwright smoke and WCAG checks
+.github/workflows/            CI and scheduled production audits
+```
 
----
+## Architecture rules
 
-## Configuration
+1. Calculator formulas must remain pure and independently testable.
+2. Exact mathematical requirements and purchase recommendations must remain separate.
+3. Formula changes require regression/golden tests and domain review.
+4. New indexable pages must solve a distinct user task; do not create keyword doorway pages.
+5. Preview/development deployments must stay non-indexable.
+6. Supporting content must link to relevant tools and add real reference value.
+7. Optional analytics or ad tags must respect the consent state where consent is required.
+8. Do not add a database, authentication or server API until a proven product feature requires persistence.
 
-Copy `.env.example` to `.env.local` and set values as needed:
+## Environment
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical production origin used for canonicals + sitemap | `https://yardagelab.com` |
-| `NEXT_PUBLIC_ALLOW_INDEX` | Set `false` to force `noindex` even in production | unset |
+Copy `.env.example` to `.env.local`.
 
-**Indexing is safe by default:** `robots.ts` and `sitemap.ts` only open the site to search engines
-when `VERCEL_ENV=production`. Preview and development builds emit `noindex` + an empty sitemap, so
-staging can never leak into search.
+- `NEXT_PUBLIC_SITE_URL` — canonical production origin.
+- `NEXT_PUBLIC_ALLOW_INDEX=false` — emergency/controlled production noindex override.
+- `NEXT_PUBLIC_ENABLE_CONSENT_BANNER=true` — enables the optional-tag consent UI when an actual analytics/ad provider is introduced.
 
-Analytics is a no-op until a real `gtag`/`dataLayer` is present (`src/lib/analytics.ts`). No
-non-essential cookies are set out of the box.
+Vercel provides `VERCEL_ENV`; `robots.ts` and `sitemap.ts` use production state to prevent preview indexation.
 
----
+## CI/CD
 
-## Deploying
+Pull requests run:
 
-The app is a standard Next.js project and deploys to **Vercel** with zero config (framework preset =
-Next.js). Set `NEXT_PUBLIC_SITE_URL` to your domain in the Vercel project settings. Point DNS
-(e.g. via Cloudflare) at Vercel, then submit `https://yourdomain.com/sitemap.xml` in Google Search
-Console.
+- TypeScript
+- ESLint
+- unit/golden tests
+- production build
+- Playwright desktop/mobile smoke tests
+- axe WCAG smoke checks
+- internal SEO crawl
+- health checks
+- Lighthouse CI
 
----
+`production-readiness` adds these gates without moving calculator formulas into new layers or changing the existing route taxonomy.
+
+## Deployment
+
+Recommended topology:
+
+```text
+GitHub -> Vercel -> Cloudflare DNS/security -> public domain
+```
+
+After production launch:
+
+1. Set `NEXT_PUBLIC_SITE_URL` to the real canonical domain.
+2. Set repository variable `SITE_URL` to the live URL to enable the scheduled weekly GitHub site audit.
+3. Verify Search Console domain ownership and submit `/sitemap.xml`.
+4. Validate `/robots.txt`, canonicals and critical calculator routes.
+5. Keep advertising disabled until the site has useful indexed content and meaningful traffic.
+
+## Privacy and ads
+
+The project does not load a real analytics or advertising provider by default. The consent component is a scaffold only. Before enabling ads or non-essential analytics, configure the actual vendor, jurisdiction-appropriate consent behavior, policy text, retention details, ads.txt where required and working contact details.
+
+## Operations
+
+See `OPERATIONS.md` for launch checks, incident runbooks, crawler operations and SEO maintenance.
 
 ## License
 
-Provided as a project starter for the owner. Review the legal page templates
-(`/privacy-policy/`, `/cookie-policy/`, `/terms/`) with a qualified professional before launch.
+Provided as a project starter for the owner. Finalize legal/privacy pages for the actual operator and vendors before public monetization.

@@ -2,9 +2,9 @@
  * Minimal, privacy-conscious analytics instrumentation.
  *
  * Emits typed product events to `window.dataLayer` / `gtag` when present.
- * No raw measurement inputs are ever sent — only calculator ids and unit
- * systems, per the blueprint's prohibited-tracking rules. Safe to call on the
- * server (becomes a no-op).
+ * No raw measurement inputs are ever sent. If the optional consent UI is
+ * enabled, events are suppressed until the user explicitly accepts optional
+ * analytics.
  */
 
 type AnalyticsEvent =
@@ -23,8 +23,16 @@ declare global {
   }
 }
 
+const CONSENT_KEY = 'yardagelab-consent-v1';
+
+function analyticsAllowed(): boolean {
+  if (typeof window === 'undefined') return false;
+  if (process.env.NEXT_PUBLIC_ENABLE_CONSENT_BANNER !== 'true') return true;
+  return window.localStorage.getItem(CONSENT_KEY) === 'accepted';
+}
+
 export function track(event: AnalyticsEvent): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !analyticsAllowed()) return;
   try {
     if (typeof window.gtag === 'function') {
       window.gtag('event', event.name, event.params);
