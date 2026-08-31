@@ -25,16 +25,16 @@
     "@axe-core/playwright": "4.13.0",
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.62.1",
-    "@types/node": "22.17.2",
+    "@types/node": "26.4.0",
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4",
-    "autoprefixer": "10.4.20",
-    "eslint": "9.39.5",
-    "eslint-config-next": "16.2.11",
-    "postcss": "8.4.41",
-    "tailwindcss": "3.4.10",
-    "typescript": "5.9.3",
-    "vitest": "1.6.0"
+    "@types/react-dom": "19.2.5",
+    "autoprefixer": "10.5.4",
+    "eslint": "10.9.1",
+    "eslint-config-next": "16.3.3",
+    "postcss": "8.5.26",
+    "tailwindcss": "4.3.3",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
   },
   "engines": {
     "node": ">=22.13.0 <25"
