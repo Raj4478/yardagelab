@@ -110,7 +110,7 @@ function buildCurtainVisualization(
   cutLengthIn: number,
 ): VisualizationData {
   const rects: VisualizationData['rects'] = [];
-  for (let i = 0; i < widths; i++) {
+  for (let i = 0; i < Math.min(widths, 400); i++) {
     rects.push({
       x: i * fabricWidthIn,
       y: 0,
@@ -124,7 +124,7 @@ function buildCurtainVisualization(
     boundingWidth: Math.max(widths * fabricWidthIn, 1),
     boundingHeight: Math.max(cutLengthIn, 1),
     rects,
-    caption: `${widths} fabric width${widths === 1 ? '' : 's'} × ${roundTo(cutLengthIn, 1)} in`,
+    caption: `${widths > 400 ? 'Diagram shows first 400 widths. ' : ''}${widths} fabric width${widths === 1 ? '' : 's'} × ${roundTo(cutLengthIn, 1)} in`,
   };
 }
 

@@ -17,7 +17,7 @@ describe('calculateQuiltBacking — golden cases', () => {
     expect(r.requiredBackingLengthIn).toBe(88);
     expect(r.panelCount).toBe(2);
     expect(r.seamOrientation).toBe('vertical');
-    expect(r.exactYardage).toBeCloseTo(4.9167, 3);
+    expect(r.exactYardage).toBeCloseTo(176 / 36, 3);
     expect(r.recommendedPurchaseYardage).toBeCloseTo(5.0, 9);
     expect(r.panelCuts).toHaveLength(2);
   });
@@ -28,6 +28,27 @@ describe('calculateQuiltBacking — golden cases', () => {
     expect(r.exactYardage).toBeCloseTo(48 / 36, 3);
     expect(r.recommendedPurchaseYardage).toBeCloseTo(1.5, 9);
     expect(r.warnings.some((w) => w.code === 'single_width')).toBe(true);
+  });
+
+  it('accounts for lost width at an exact two-panel boundary', () => {
+    const r = calculateQuiltBacking({ ...base, quiltWidth: inch(76), quiltLength: inch(80), directionalFabric: true });
+    expect(r.requiredBackingWidthIn).toBe(84);
+    expect(r.panelCount).toBe(3);
+    expect(r.panelCuts[0]?.cutLengthIn).toBe(88);
+    expect(r.recommendedPurchaseYardage).toBe(7.5);
+  });
+
+  it('all chosen panels cover the backing after seams in either orientation', () => {
+    for (const width of [41, 42, 76, 100, 118]) for (const length of [34, 80, 112]) for (const seam of [0, 0.25, 0.5]) {
+      const r = calculateQuiltBacking({ ...base, seamAllowance: inch(seam), quiltWidth: inch(width), quiltLength: inch(length) });
+      const joined = r.panelCount * 42 - 2 * seam * (r.panelCount - 1);
+      const across = r.seamOrientation === 'vertical' ? r.requiredBackingWidthIn : r.requiredBackingLengthIn;
+      expect(joined).toBeGreaterThanOrEqual(across);
+    }
+  });
+
+  it('rejects seams that consume the entire usable width', () => {
+    expect(() => calculateQuiltBacking({ ...base, seamAllowance: inch(21), quiltWidth: inch(60), quiltLength: inch(80) })).toThrow(RangeError);
   });
 
   it('directional fabric forbids rotating panels', () => {

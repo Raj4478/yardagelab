@@ -137,8 +137,8 @@ function buildYardageVisualization(
   rects.push({ x: 0, y: 0, width: fabricWidthIn, height: totalLen, role: 'fabric', label: 'Fabric' });
 
   let placed = 0;
-  for (let r = 0; r < layout.rows && placed < quantity; r++) {
-    for (let c = 0; c < layout.piecesPerRow && placed < quantity; c++) {
+  for (let r = 0; r < layout.rows && placed < quantity && placed < 400; r++) {
+    for (let c = 0; c < layout.piecesPerRow && placed < quantity && placed < 400; c++) {
       rects.push({
         x: c * layout.pieceAcrossIn,
         y: r * layout.pieceAlongIn,
@@ -154,7 +154,7 @@ function buildYardageVisualization(
     boundingWidth: fabricWidthIn,
     boundingHeight: Math.max(totalLen, layout.pieceAlongIn),
     rects,
-    caption: `${quantity} pieces, ${layout.piecesPerRow} per row × ${layout.rows} row${layout.rows === 1 ? '' : 's'}`,
+    caption: `${quantity > 400 ? 'Diagram shows first 400 pieces. ' : ''}${quantity} pieces, ${layout.piecesPerRow} per row × ${layout.rows} row${layout.rows === 1 ? '' : 's'}`,
   };
 }
 

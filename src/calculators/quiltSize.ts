@@ -7,6 +7,7 @@ import type {
 } from './types';
 import { convert } from '@/lib/units';
 import { roundTo } from '@/lib/rounding';
+import quiltSizes from '@/lib/quilt-sizes.json';
 
 /**
  * Quilt size calculator.
@@ -41,14 +42,7 @@ export interface QuiltSizeResult extends BaseResult {
 }
 
 /** Common finished US quilt/bed sizes (approximate, drop included). */
-export const BED_SIZES: BedSizeMatch[] = [
-  { name: 'Baby / Crib', widthIn: 36, lengthIn: 52 },
-  { name: 'Throw / Lap', widthIn: 52, lengthIn: 60 },
-  { name: 'Twin', widthIn: 70, lengthIn: 90 },
-  { name: 'Full / Double', widthIn: 84, lengthIn: 90 },
-  { name: 'Queen', widthIn: 90, lengthIn: 100 },
-  { name: 'King', widthIn: 108, lengthIn: 100 },
-];
+export const BED_SIZES: BedSizeMatch[] = quiltSizes;
 
 export function calculateQuiltSize(input: QuiltSizeInput): QuiltSizeResult {
   const blockIn = toIn(input.finishedBlockSize);
@@ -124,8 +118,8 @@ function buildQuiltSizeVisualization(
   const rects: VisualizationData['rects'] = [];
   rects.push({ x: 0, y: 0, width: totalW, height: totalL, role: 'border', label: 'Border' });
 
-  for (let r = 0; r < down; r++) {
-    for (let c = 0; c < across; c++) {
+  for (let r = 0; r < down && rects.length <= 400; r++) {
+    for (let c = 0; c < across && rects.length <= 400; c++) {
       const x = borderIn + c * (blockIn + sashIn);
       const y = borderIn + r * (blockIn + sashIn);
       rects.push({ x, y, width: blockIn, height: blockIn, role: 'block' });
@@ -136,7 +130,7 @@ function buildQuiltSizeVisualization(
     boundingWidth: Math.max(totalW, 1),
     boundingHeight: Math.max(totalL, 1),
     rects,
-    caption: `${across} × ${down} = ${across * down} blocks`,
+    caption: `${across * down > 400 ? 'Diagram shows first 400 blocks. ' : ''}${across} × ${down} = ${across * down} blocks`,
   };
 }
 

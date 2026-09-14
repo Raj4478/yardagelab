@@ -14,6 +14,8 @@ type AnalyticsEvent =
   | { name: 'calculation_error'; params: { calculator_id: string; error_type: string } }
   | { name: 'related_tool_clicked'; params: { from_tool: string; to_tool: string } }
   | { name: 'print_plan'; params: { calculator_id: string } }
+  | { name: 'copy_results' | 'share_calculation' | 'share_whatsapp'; params: { calculator_id: string } }
+  | { name: 'download_chart'; params: { chart_id: string } }
   | { name: 'unit_system_changed'; params: { from: string; to: string } };
 
 declare global {
@@ -25,10 +27,18 @@ declare global {
 
 const CONSENT_KEY = 'yardagelab-consent-v1';
 
-function analyticsAllowed(): boolean {
+export function analyticsAllowed(): boolean {
   if (typeof window === 'undefined') return false;
   if (process.env.NEXT_PUBLIC_ENABLE_CONSENT_BANNER !== 'true') return true;
-  return window.localStorage.getItem(CONSENT_KEY) === 'accepted';
+  try { return window.localStorage.getItem(CONSENT_KEY) === 'accepted'; }
+  catch { return false; }
+}
+
+const pending: AnalyticsEvent[] = [];
+
+export function flushAnalytics(): void {
+  const events = pending.splice(0);
+  if (analyticsAllowed()) events.forEach(track);
 }
 
 export function track(event: AnalyticsEvent): void {
@@ -36,8 +46,9 @@ export function track(event: AnalyticsEvent): void {
   try {
     if (typeof window.gtag === 'function') {
       window.gtag('event', event.name, event.params);
-    } else if (Array.isArray(window.dataLayer)) {
-      window.dataLayer.push({ event: event.name, ...event.params });
+    } else if (/^G-[A-Z0-9]+$/.test(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '')) {
+      // Retain a small in-memory queue while the consent-approved GA script starts.
+      if (pending.length < 50) pending.push(event);
     }
   } catch {
     /* analytics must never break the calculator */

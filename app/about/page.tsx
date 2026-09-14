@@ -18,7 +18,7 @@ export default function Page() {
       <ul>
         <li><strong>Utility first.</strong> Every page is a tool you can use, not a wall of text wrapped around an ad.</li>
         <li><strong>Show the work.</strong> We separate the exact mathematical result from a shop-friendly amount to buy, and we list our assumptions on every result.</li>
-        <li><strong>Tested math.</strong> Each formula is backed by a suite of automated golden tests and human review before it ships.</li>
+        <li><strong>Tested math.</strong> Our calculation code includes automated tests. Formulas and assumptions are published so makers can check whether the model fits their project.</li>
         <li><strong>Fast and calm.</strong> No pop-ups over the inputs, no layout shift, no sign-up.</li>
       </ul>
       <h3>How the numbers are made</h3>

@@ -23,8 +23,7 @@ export default defineConfig({
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
-        command:
-          'VERCEL_ENV=production NEXT_PUBLIC_ALLOW_INDEX=true NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000 npm run build && npm start',
+        command: 'node scripts/e2e-server.mjs',
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 180_000,

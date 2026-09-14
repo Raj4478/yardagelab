@@ -8,7 +8,8 @@ const CONSENT_EVENT = 'yardagelab:consent';
 
 function readStoredConsent(): ConsentState | null {
   if (typeof window === 'undefined') return null;
-  const value = localStorage.getItem(STORAGE_KEY);
+  let value: string | null = null;
+  try { value = localStorage.getItem(STORAGE_KEY); } catch { return 'essential-only'; }
   return value === 'accepted' || value === 'essential-only' ? value : null;
 }
 
@@ -36,7 +37,7 @@ export function ConsentBanner() {
   if (!enabled || consent !== null) return null;
 
   const save = (state: ConsentState) => {
-    localStorage.setItem(STORAGE_KEY, state);
+    try { localStorage.setItem(STORAGE_KEY, state); } catch { return; }
     window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: state }));
   };
 
@@ -47,8 +48,7 @@ export function ConsentBanner() {
     >
       <h2 className="font-display text-xl font-semibold text-ink">Privacy choices</h2>
       <p className="mt-2 font-sans text-sm leading-relaxed text-ink-soft">
-        YardageLab uses optional Google Analytics to understand how the tools are used. You can allow
-        analytics or continue with essential storage only; calculator measurements are not sent to analytics.
+        Allow optional Google Analytics to help improve these tools? Your measurements are not sent to analytics.
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <button type="button" className="btn-primary" onClick={() => save('accepted')}>

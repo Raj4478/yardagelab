@@ -1,0 +1,8 @@
+[
+  { "name": "Baby / Crib", "widthIn": 36, "lengthIn": 52 },
+  { "name": "Throw / Lap", "widthIn": 52, "lengthIn": 60 },
+  { "name": "Twin", "widthIn": 70, "lengthIn": 90 },
+  { "name": "Full / Double", "widthIn": 84, "lengthIn": 90 },
+  { "name": "Queen", "widthIn": 90, "lengthIn": 100 },
+  { "name": "King", "widthIn": 108, "lengthIn": 100 }
+]

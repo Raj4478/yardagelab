@@ -74,12 +74,11 @@ function planOrientation(
   fabricWidthIn: number,
   seamAllowanceIn: number,
 ): OrientationPlan {
-  // Panels are cut the full usable width of the fabric and seamed side by
-  // side to span `across`. Each panel's cut length covers `along` plus a
-  // seam allowance at each join.
-  const panelCount = Math.max(1, Math.ceil(roundTo(across / fabricWidthIn, 6)));
-  const seamsPerPanel = panelCount > 1 ? 2 : 0; // both cut ends available to seam
-  const cutLengthIn = along + seamsPerPanel * seamAllowanceIn;
+  // n widths provide n * width - 2 * seam * (n - 1) after joining.
+  // Side-by-side seams consume width, not the length pulled off the bolt.
+  const panelCount = across <= fabricWidthIn ? 1 : Math.max(2,
+    Math.ceil(roundTo((across - 2 * seamAllowanceIn) / (fabricWidthIn - 2 * seamAllowanceIn), 6)));
+  const cutLengthIn = along;
   const totalFabricLengthIn = panelCount * cutLengthIn;
   return { orientation, panelCount, totalFabricLengthIn, cutLengthIn };
 }
@@ -92,6 +91,12 @@ export function calculateQuiltBacking(input: BackingInput): BackingResult {
   const seamAllowanceIn = toIn(input.seamAllowance);
   const purchaseIncrementYd = input.purchaseIncrementYd ?? 0.25;
   const directional = input.directionalFabric ?? false;
+
+  if (![quiltWidthIn, quiltLengthIn, fabricWidthIn].every(value => Number.isFinite(value) && value > 0) ||
+      ![overhangIn, seamAllowanceIn].every(value => Number.isFinite(value) && value >= 0) ||
+      2 * seamAllowanceIn >= fabricWidthIn) {
+    throw new RangeError('Use positive dimensions and a seam allowance smaller than half the fabric width.');
+  }
 
   const warnings: CalculationWarning[] = [];
   if (fabricWidthIn <= 0) {
