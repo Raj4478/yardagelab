@@ -1,7 +1,8 @@
 'use client';
 
 import Script from 'next/script';
-import { useSyncExternalStore } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
+import { flushAnalytics } from '@/lib/analytics';
 
 const CONSENT_KEY = 'yardagelab-consent-v1';
 const CONSENT_EVENT = 'yardagelab:consent';
@@ -26,13 +27,17 @@ function subscribe(onStoreChange: () => void) {
 function analyticsAllowed(): boolean {
   if (typeof window === 'undefined') return false;
   if (process.env.NEXT_PUBLIC_ENABLE_CONSENT_BANNER !== 'true') return true;
-  return window.localStorage.getItem(CONSENT_KEY) === 'accepted';
+  try { return window.localStorage.getItem(CONSENT_KEY) === 'accepted'; } catch { return false; }
 }
 
 export function GoogleAnalytics({ measurementId }: { measurementId?: string }) {
   const allowed = useSyncExternalStore(subscribe, analyticsAllowed, () => false);
+  useEffect(() => {
+    window.addEventListener('yardagelab:analytics-ready', flushAnalytics);
+    return () => window.removeEventListener('yardagelab:analytics-ready', flushAnalytics);
+  }, []);
 
-  if (!measurementId || !allowed) return null;
+  if (!measurementId || !/^G-[A-Z0-9]+$/.test(measurementId) || !allowed) return null;
 
   return (
     <>
@@ -47,6 +52,7 @@ export function GoogleAnalytics({ measurementId }: { measurementId?: string }) {
           window.gtag = gtag;
           gtag('js', new Date());
           gtag('config', '${measurementId}', { anonymize_ip: true });
+          window.dispatchEvent(new Event('yardagelab:analytics-ready'));
         `}
       </Script>
     </>

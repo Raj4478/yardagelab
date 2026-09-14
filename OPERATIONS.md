@@ -1,5 +1,15 @@
 # YardageLab Operations
 
+## Sharing, downloads and optional analytics
+
+- Every tool offers Copy results, WhatsApp and the native device share menu. Unsupported native sharing falls back to copying; blocked clipboard access reveals selectable text. WhatsApp opens a draft for the user to review and send. No automatic messages are sent.
+- Shared text includes the current inputs, units, result and page URL. Measurement values are not added to the URL or analytics events. The recipient receives text, not a saved calculator state.
+- The quilt chart is a static PDF at `/downloads/yardagelab-quilt-size-chart.pdf`. It needs no signup and no email service. Rebuild using `python scripts/build-quilt-chart.py` with ReportLab installed, then visually inspect both pages. `src/lib/quilt-sizes.json` supplies the PDF, guide and calculator dimensions. Georgia fonts are optional; `YARDAGELAB_FONT_DIR` can point to their directory.
+- GA4 remains optional: omit `NEXT_PUBLIC_GA_MEASUREMENT_ID` to load no Google Analytics script. To enable it, set a valid `G-...` ID and `NEXT_PUBLIC_ENABLE_CONSENT_BANNER=true`, then rebuild. Review `calculator_view`, `calculation_started`, `calculation_completed`, `copy_results`, `share_calculation`, `share_whatsapp`, `print_plan` and `download_chart`. Register `calculator_id` and `chart_id` as event-scoped custom dimensions in GA4.
+- A completion event means a valid result remained after an input edit for 800 ms; default prefilled results are not completions. The unit converter currently tracks views and sharing, not completion events. Native share cancellation does not count as a share; WhatsApp events count button clicks, not delivered messages. Download events count clicks, not confirmed file saves.
+- Use GA4 acquisition reports for traffic sources. Search keywords remain in Search Console: compare queries and landing pages there, or link the properties in GA4. Do not expect GA4 to identify each visitor's organic search keyword.
+- Test against a production build with `npm run test:e2e`. The runner works on Windows and Linux. It enables the consent banner and uses a local canonical origin. `PLAYWRIGHT_BASE_URL` can target an already-running test server built with the same consent setting.
+
 ## Launch checklist
 
 - `npm run typecheck`, `npm run lint`, `npm test`, `npm run build` all pass from a clean install.

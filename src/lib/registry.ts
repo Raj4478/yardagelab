@@ -72,7 +72,7 @@ export const CALCULATORS: CalculatorMeta[] = [
       'Free quilt backing calculator: enter your quilt size and fabric width to get exact yardage, panel cuts, seam direction and a visual cutting plan.',
     keywords: ['quilt backing calculator', 'quilt backing yardage', 'how much backing fabric'],
     related: ['quilt-binding-calculator', 'quilt-size-calculator', 'fabric-unit-converter'],
-    lastReviewed: '2026-08-23',
+    lastReviewed: '2026-09-14',
   },
   {
     id: 'quilt-binding-calculator',

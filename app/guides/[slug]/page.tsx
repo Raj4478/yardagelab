@@ -5,6 +5,7 @@ import { ContentPage } from '@/components/content/ContentPage';
 import { GUIDE_BY_SLUG, GUIDES } from '@/lib/guides';
 import { CALCULATOR_BY_ID, type CalculatorMeta } from '@/lib/registry';
 import { generatePageMetadata } from '@/lib/seo';
+import { GuideReference } from '@/components/content/GuideReference';
 
 export function generateStaticParams() {
   return GUIDES.map((guide) => ({ slug: guide.slug }));
@@ -37,6 +38,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       breadcrumbName="Guides"
       breadcrumbPath="/guides/"
     >
+      <GuideReference slug={guide.slug} />
       {guide.sections.map((section) => (
         <section key={section.heading}>
           <h2>{section.heading}</h2>

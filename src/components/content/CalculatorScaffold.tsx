@@ -3,6 +3,9 @@ import { StructuredData } from '@/components/seo/StructuredData';
 import { HUBS, CALCULATOR_BY_ID } from '@/lib/registry';
 import { webApplicationJsonLd } from '@/lib/seo';
 import { LastReviewed, RelatedTools, Section } from './sections';
+import { GUIDES } from '@/lib/guides';
+import Link from 'next/link';
+import { ChartDownload } from './ChartDownload';
 
 /**
  * Renders a calculator page in the exact order the blueprint specifies:
@@ -57,6 +60,11 @@ export function CalculatorScaffold({
       <div className="container-prose space-y-14 py-4">
         {children}
 
+        <Section title="Helpful guides">
+          <ul>{GUIDES.filter(guide => guide.relatedCalculatorIds.includes(calculatorId)).map(guide => <li key={guide.slug}><Link href={`/guides/${guide.slug}/`}>{guide.title}</Link></li>)}</ul>
+        </Section>
+        {meta.hub === 'quilting' && <ChartDownload />}
+
         <Section title="Related calculators" eyebrow="Keep planning">
           <RelatedTools calculatorId={calculatorId} />
         </Section>
@@ -68,7 +76,7 @@ export function CalculatorScaffold({
             <a href="/contact/" className="link-underline">
               Tell us
             </a>{' '}
-            — every formula is human-reviewed.
+            — help us improve the calculations.
           </p>
         </div>
       </div>

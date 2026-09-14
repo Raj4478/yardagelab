@@ -7,6 +7,8 @@ const routes = [
   '/sewing/fabric-yardage-calculator/',
   '/home-decor/curtain-fabric-calculator/',
   '/conversions/fabric-unit-converter/',
+  '/guides/fabric-yardage-conversion-chart/',
+  '/guides/standard-quilt-sizes/',
 ];
 
 for (const route of routes) {

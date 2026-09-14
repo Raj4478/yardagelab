@@ -80,7 +80,8 @@ async function auditPage(url, robotsBody) {
     }
     const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': userAgent } });
     const contentType = res.headers.get('content-type') || '';
-    const html = contentType.includes('text/html') ? await res.text() : '';
+    const isHtml = contentType.includes('text/html');
+    const html = isHtml ? await res.text() : '';
     const title = textOf(html, /<title[^>]*>([\s\S]*?)<\/title>/i);
     const description = html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i)?.[1] || html.match(/<meta\b[^>]*content=["']([^"']*)["'][^>]*name=["']description["'][^>]*>/i)?.[1] || '';
     const canonical = html.match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["'][^>]*>/i)?.[1] || html.match(/<link\b[^>]*href=["']([^"']+)["'][^>]*rel=["']canonical["'][^>]*>/i)?.[1] || '';
@@ -91,10 +92,11 @@ async function auditPage(url, robotsBody) {
 
     const issue = (severity, type, detail = '') => report.issues.push({ severity, type, url, detail });
     if (!res.ok) issue('error', 'non_200', `HTTP ${res.status}`);
-    if (res.ok && !title) issue('error', 'missing_title');
-    if (res.ok && !description) issue('warning', 'missing_meta_description');
-    if (res.ok && !canonical) issue('error', 'missing_canonical');
-    if (res.ok && h1Count !== 1) issue('warning', 'h1_count', `Found ${h1Count}`);
+    if (res.ok && isHtml && !title) issue('error', 'missing_title');
+    if (res.ok && isHtml && !description) issue('warning', 'missing_meta_description');
+    if (res.ok && isHtml && !canonical) issue('error', 'missing_canonical');
+    if (res.ok && isHtml && /\bnoindex\b/i.test(robotsMeta)) issue('error', 'page_noindex');
+    if (res.ok && isHtml && h1Count !== 1) issue('warning', 'h1_count', `Found ${h1Count}`);
     if (canonical) {
       try {
         const canonicalUrl = new URL(canonical, res.url);
