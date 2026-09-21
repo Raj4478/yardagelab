@@ -17,17 +17,17 @@
     "lighthouse": "lhci autorun"
   },
   "dependencies": {
-    "next": "16.2.11",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.62.1",
     "@types/node": "22.17.2",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "autoprefixer": "10.4.20",
     "eslint": "9.39.5",
     "eslint-config-next": "16.2.11",
