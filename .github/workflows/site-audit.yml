@@ -34,7 +34,7 @@ jobs:
         env:
           SITE_URL: ${{ vars.SITE_URL }}
           AUDIT_MAX_PAGES: 500
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ always() && vars.SITE_URL != '' }}
         with:
           name: weekly-production-seo-audit
